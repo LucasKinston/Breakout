@@ -2,7 +2,7 @@
 const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
         
-        const ballRadius = 15;
+        const ballRadius = 10;
         let x = canvas.width / 2;
         let y = canvas.height - 30;
 
@@ -13,16 +13,16 @@ const canvas = document.getElementById("myCanvas");
         let leftPressed = false;
 
 
-        const paddleHeight = 15;
-        let paddleWidth = 125;
+        const paddleHeight = 20;
+        let paddleWidth = 150;
         
         let paddleX = (canvas.width - paddleWidth) / 2;
 
         const brickRowCount = 6;
-        const brickColumnCount = 5;
-        const brickWidth = 180;
-        const brickHeight = 20;
-        const brickPadding = 10;
+        const brickColumnCount = 8;
+        const brickWidth = 113;
+        const brickHeight = 40;
+        const brickPadding = 5;
         const brickOffsetTop = 30;
         const brickOffsetLeft = 30;
 
@@ -37,7 +37,7 @@ const canvas = document.getElementById("myCanvas");
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#0095DD";
+        ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
 
@@ -115,14 +115,29 @@ const canvas = document.getElementById("myCanvas");
         } else if (y + dy > canvas.height - ballRadius) {
 
             if (x > paddleX && x < paddleX + paddleWidth) {
-              if(x < paddleX + (paddleWidth / 2)) {
+              if(x < paddleX + (paddleWidth / 5)) {
                 dx = -10;
                 
               }
-              else if(x < paddleX + paddleWidth) {
+              else if(x < paddleX + (paddleWidth / 5) * 2) {
+                dx = -5;
+                
+              }
+              else if(x < paddleX + (paddleWidth / 5) * 3) {
+                dx = 0;
+                
+              }
+              else if(x < paddleX + (paddleWidth / 5) * 4) {
+                dx = 5;
+                
+              }
+
+
+              else if(x < paddleX + (paddleWidth / 5) * 5) {
                 dx = 10;
                 
               }
+
               dy = -dy; 
             } else {
                 lives--;
@@ -230,7 +245,7 @@ function collisionDetection() {
             */
            
             if (paddleWidth > minPaddleWidth) {
-              paddleWidth -= 5
+              paddleWidth -= 2
             }
 
            levelSpeed = dy
