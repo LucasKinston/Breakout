@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
         
@@ -34,10 +33,17 @@ const canvas = document.getElementById("myCanvas");
 
        const minPaddleWidth = 50
        
+       const maxSpeed = 20
+
        var pause = function() {
         alert("GAME PAUSED, PRESS 'OK' TO CONTINUE")
        }
        
+       function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -124,15 +130,15 @@ const canvas = document.getElementById("myCanvas");
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 2) {
-                dx = -5;
+                dx = -4;
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 3) {
-                dx = 0;
+                dx = -dx;
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 4) {
-                dx = 5;
+                dx = 4;
                 
               }
 
@@ -253,7 +259,11 @@ function collisionDetection() {
             }
 
            levelSpeed = dy
-           dy+= 1
+           if (dy <= maxSpeed) {
+              dy+= 0.75
+            }
+           
+          
            /*if (dx < 0) {
             dx -= 1
            }
@@ -281,14 +291,15 @@ function drawLives() {
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-
+let bombColumn = getRandomInt(brickColumnCount );
+let bombRow = getRandomInt(brickRowCount);
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
-  for (let r = 0; r < brickRowCount; r++) {
+  for (let r = 0; r <brickRowCount; r++) {
     let isBomb = 0;
     
-    if(r==1 && c == 3 ) isBomb = 1
+    if(r== bombRow && c == bombColumn ) isBomb = 1
     bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb };
   }
 }
