@@ -32,8 +32,12 @@ const canvas = document.getElementById("myCanvas");
         
         let levelSpeed = -5;
 
-      const minPaddleWidth = 50
-
+       const minPaddleWidth = 50
+       
+       var pause = function() {
+        alert("GAME PAUSED, PRESS 'OK' TO CONTINUE")
+       }
+       
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -116,7 +120,7 @@ const canvas = document.getElementById("myCanvas");
 
             if (x > paddleX && x < paddleX + paddleWidth) {
               if(x < paddleX + (paddleWidth / 5)) {
-                dx = -10;
+                dx = -7.5;
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 2) {
@@ -134,7 +138,7 @@ const canvas = document.getElementById("myCanvas");
 
 
               else if(x < paddleX + (paddleWidth / 5) * 5) {
-                dx = 10;
+                dx = 7.5;
                 
               }
 
@@ -245,7 +249,7 @@ function collisionDetection() {
             */
            
             if (paddleWidth > minPaddleWidth) {
-              paddleWidth -= 2
+              paddleWidth -= 1
             }
 
            levelSpeed = dy
