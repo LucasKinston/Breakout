@@ -33,7 +33,7 @@ const canvas = document.getElementById("myCanvas");
         
         let levelSpeed = -5;
 
-        let overallScore = 0 
+        let round = 0
 
        const minPaddleWidth = 50
        
@@ -117,6 +117,7 @@ const canvas = document.getElementById("myCanvas");
         drawPaddle();
         drawScore();
         drawLives();
+        drawRound();
         collisionDetection();
         x += dx;
         y += dy;
@@ -235,7 +236,6 @@ function collisionDetection() {
           }
           else {
             score++ 
-            overallScore = overallScore + score
           }
 
 
@@ -302,7 +302,11 @@ function drawLives() {
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-
+function drawRound() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText(`Round: ${round}`, 100, 20);
+}
 function initialiseBlocks(){
   let bombColumn = getRandomInt(brickColumnCount );
   let bombRow = getRandomInt(brickRowCount);
@@ -315,6 +319,7 @@ function initialiseBlocks(){
       bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb };
     }
   }
+round+=1
 }
 
 initialiseBlocks();
