@@ -5,7 +5,7 @@ const canvas = document.getElementById("myCanvas");
         let x = canvas.width / 2;
         let y = canvas.height - 30;
 
-        let dx = 5;
+        let dx = 0;
         let dy = -5;
 
         let rightPressed = false;
@@ -25,11 +25,15 @@ const canvas = document.getElementById("myCanvas");
         const brickOffsetTop = 30;
         const brickOffsetLeft = 30;
 
+        const bricks = [];
+
        let score = 0;
 
         let lives = 3;
         
         let levelSpeed = -5;
+
+        let overallScore = 0 
 
        const minPaddleWidth = 50
        
@@ -126,11 +130,11 @@ const canvas = document.getElementById("myCanvas");
 
             if (x > paddleX && x < paddleX + paddleWidth) {
               if(x < paddleX + (paddleWidth / 5)) {
-                dx = -7.5;
+                dx = -3;
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 2) {
-                dx = -4;
+                dx = -1.5;
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 3) {
@@ -138,30 +142,26 @@ const canvas = document.getElementById("myCanvas");
                 
               }
               else if(x < paddleX + (paddleWidth / 5) * 4) {
-                dx = 4;
+                dx = 1.5;
                 
               }
 
 
               else if(x < paddleX + (paddleWidth / 5) * 5) {
-                dx = 7.5;
+                dx = 3;
                 
               }
 
               dy = -dy; 
             } else {
                 lives--;
-                if (lives<1) {
-                    alert("GAME OVER");
-                    document.location.reload();
-                } else {
+                checkGameOver()
+              
                     x = canvas.width / 2;
                     y = canvas.height - 30;
                     dx = 2;
                     dy = -levelSpeed;
                     paddleX = (canvas.width - paddleWidth) / 2;
-            
-                }
 
             }
 
@@ -207,6 +207,13 @@ const canvas = document.getElementById("myCanvas");
     }
 
 
+function checkGameOver() {
+  if (lives < 1) {
+    alert("GAME OVER");
+    document.location.reload();
+  }
+  
+}
 
 function collisionDetection() {
   
@@ -227,20 +234,19 @@ function collisionDetection() {
             score--
           }
           else {
-            score++
+            score++ 
+            overallScore = overallScore + score
           }
-
-          
 
 
           if (score === (brickRowCount * brickColumnCount)-2) {
-            alert("YOU WIN, CONGRATULATIONS!");
-            document.location.reload();
+            initialiseBlocks();
             
           }else{
 
             if(b.isBomb == 1){
               lives -= 1
+              checkGameOver()
             }
             
             
@@ -260,7 +266,7 @@ function collisionDetection() {
 
            levelSpeed = dy
            if (dy <= maxSpeed) {
-              dy+= 0.75
+              dy+= 0.1
             }
            
           
@@ -275,9 +281,14 @@ function collisionDetection() {
 
         }
       }
+      if(b.status === 0 && lives > 0){
+        b.status === 1
+      }
     }
   }
-}
+    
+  
+  }
 
 function drawScore() {
   ctx.font = "16px Arial";
@@ -291,16 +302,20 @@ function drawLives() {
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-let bombColumn = getRandomInt(brickColumnCount );
-let bombRow = getRandomInt(brickRowCount);
-const bricks = [];
-for (let c = 0; c < brickColumnCount; c++) {
-  bricks[c] = [];
-  for (let r = 0; r <brickRowCount; r++) {
-    let isBomb = 0;
-    
-    if(r== bombRow && c == bombColumn ) isBomb = 1
-    bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb };
+
+function initialiseBlocks(){
+  let bombColumn = getRandomInt(brickColumnCount );
+  let bombRow = getRandomInt(brickRowCount);
+  for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r <brickRowCount; r++) {
+      let isBomb = 0;
+      
+      if(r== bombRow && c == bombColumn ) isBomb = 1
+      bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb };
+    }
   }
 }
+
+initialiseBlocks();
 draw();
