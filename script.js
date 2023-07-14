@@ -5,8 +5,8 @@ const canvas = document.getElementById("myCanvas");
         let x = canvas.width / 2;
         let y = canvas.height - 30;
 
-        let dx = 0;
-        let dy = -5;
+        let dx = 1;
+        let dy = -7;
 
         let rightPressed = false;
         let leftPressed = false;
@@ -29,7 +29,7 @@ const canvas = document.getElementById("myCanvas");
 
        let score = 0;
 
-        let lives = 3;
+        let lives = 2;
         
         let levelSpeed = -5;
 
@@ -37,7 +37,7 @@ const canvas = document.getElementById("myCanvas");
 
        const minPaddleWidth = 50
        
-       const maxSpeed = 20
+       const maxSpeed = 40
 
        var pause = function() {
         alert("GAME PAUSED, PRESS 'OK' TO CONTINUE")
@@ -97,7 +97,10 @@ const canvas = document.getElementById("myCanvas");
                     if(bricks[c][r].isBomb ===1) {
                       ctx.fillStyle = "#ff0000";
                     }
-                    else{
+                    else if(bricks[c][r].isPowerUp ===1) {
+                      ctx.fillStyle = "#800080";
+                    }
+                    else {
                       ctx.fillStyle = "#0095DD";
                     }
                     ctx.fill();
@@ -234,12 +237,57 @@ function collisionDetection() {
           if (b.isBomb ==1) {
             score--
           }
+          if (b.isPowerUp ==1) {
+            b.status = 0;
+            let minColumn = c-1;
+            
+            if (minColumn < 0 ) {
+              minColumn = 0;
+            }
+            let maxColumn = c+1;
+            if (maxColumn >= brickColumnCount) {
+              maxColumn = brickColumnCount - 1
+            }
+
+            let minRow = r - 1;
+
+            let maxRow = r + 1;
+
+            if (minRow < 0) {
+              minRow = 0;
+            }           
+
+            if (maxRow >= brickRowCount) {
+              maxRow = brickRowCount - 1
+            }
+
+            for(let newc = minColumn; newc <= maxColumn; newc++){
+                
+              
+                for(let newr = minRow; newr <= maxRow; newr++){
+                  
+                  if (bricks[newc][newr].status != 0 ) {
+                  bricks[newc][newr].status =0;
+                  
+                  score += 1
+                }}
+
+              }
+
+            
+
+          
+
+            
+          }
+          
           else {
             score++ 
+
           }
-
-
-          if (score === (brickRowCount * brickColumnCount)-2) {
+           
+          if(bricksLeft() == 0){
+        //  if (score === (brickRowCount * brickColumnCount)-2) {
             initialiseBlocks();
             
           }else{
@@ -266,7 +314,7 @@ function collisionDetection() {
 
            levelSpeed = dy
            if (dy <= maxSpeed) {
-              dy+= 0.1
+              dy+= 0.5
             }
            
           
@@ -310,16 +358,34 @@ function drawRound() {
 function initialiseBlocks(){
   let bombColumn = getRandomInt(brickColumnCount );
   let bombRow = getRandomInt(brickRowCount);
+  let PowerUpColumn = getRandomInt(brickColumnCount );
+  let PowerUpRow = getRandomInt(brickColumnCount );
   for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for (let r = 0; r <brickRowCount; r++) {
       let isBomb = 0;
-      
-      if(r== bombRow && c == bombColumn ) isBomb = 1
-      bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb };
+      let isPowerUp = 0
+      if(r== bombRow && c == bombColumn ) {
+        isBomb = 1
+        }
+      if(r== PowerUpRow && c == PowerUpColumn ) isPowerUp = 1
+      bricks[c][r] = { x: 0, y: 0, status: 1, isBomb: isBomb, isPowerUp: isPowerUp };
     }
   }
 round+=1
+lives+=1
+}
+
+function bricksLeft(){
+  let bricksLeftCount = 0
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const b = bricks[c][r];
+      if (b.status === 1) {
+        bricksLeftCount+=1
+}}}
+return bricksLeftCount
+
 }
 
 initialiseBlocks();
